@@ -1,39 +1,48 @@
-# Copyright (C) =:year:=  =:author:=
+# Copyright (C) 2025 Cesar Perez
 
 PROMPT ::= =>
 SHELL ::= bash
 
-NOTEBOOK_IMAGE ::= pytorch
-NOTEBOOK_VERSION ::= cuda12-python-3.12
-# Values: lab (default), notebook, nbclassic
-NOTEBOOK_FLAVOR ::= lab
-NOTEBOOK_PORT ::= 8888
+SERVICE_PORT = `grep SERVICE_PORT .env | cut --delimiter=' ' --field=3`
+NOTEBOOK_TOKEN = `grep NOTEBOOK_TOKEN .env | cut --delimiter=' ' --field=3`
 
-DATA_DIR ::= data
+JUPYTER_HOST = `grep NOTEBOOK_HOST .env | cut --delimiter=' ' --field=3`
+JUPYTER_URL = http://jupyter.localhost:${SERVICE_PORT}?token=${NOTEBOOK_TOKEN}"
+
+MLFLOW_HOST = `grep MLFLOW_HOST .env | cut --delimiter=' ' --field=3`
+MLFLOW_URL = http://mlflow.localhost:${SERVICE_PORT}"
+
+RUNS_DIR ::= runs
 WORK_DIR ::= work
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.PHONY: notebook
+.PHONY: setup
 
-notebook:
-	echo "${PROMPT} Starting the notebook environment"
-	@docker container run \
-		--rm \
-		--tty --interactive \
-		--gpus all \
-		--user `id --user`:`id --group` \
-		--env DOCKER_STACKS_JUPYTER_CMD=${NOTEBOOK_FLAVOR} \
-		--volume `pwd`/${DATA_DIR}:/home/jovyan/data \
-		--volume `pwd`/${WORK_DIR}:/home/jovyan/work \
-		--publish ${NOTEBOOK_PORT}:8888 \
-		quay.io/jupyter/${NOTEBOOK_IMAGE}-notebook:${NOTEBOOK_VERSION}
+runs:
+	@echo "${PROMPT} Creating the directory for MLflow runs"
+	@mkdir --parents ${RUNS_DIR}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.PHONY: start stop
+
+start: runs
+	@echo "${PROMPT} Starting the development environment"
+	@docker compose up --detach --remove-orphans
+	@echo "${PROMPT} Jupyter at ${JUPYTER_URL}
+	@echo "${PROMPT} MLflow at ${MLFLOW_URL}
+
+
+stop:
+	@echo "${PROMPT} Stoping the development environment"
+	@docker compose down --remove-orphans
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .PHONY: clean mrproper
 
 clean:
-	@echo "${PROMPT} Removing all generated files"
-	@find . -name .ipynb_checkpoints | xargs rm -rf
+	@echo "${PROMPT} Cleaning the enviroment"
+	@find . -name .ipynb_checkpoints | xargs rm --recursive --force
 
 mrproper: clean
-	@echo "${PROMPT} Cleaning the environment"
+	@echo "${PROMPT} Purging all generated files"
+	@rm --recursive --force ${RUNS_DIR}
