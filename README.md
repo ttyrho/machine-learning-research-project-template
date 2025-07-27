@@ -1,18 +1,11 @@
-# =:title:=
+# Machine Learning Research Project Template
 
-## How to use this repository
+...
 
-This repository provides thew basic setup I use to work in a machine learning reserarch project. Whem I am about to create a new project I just clone this repository and tweak some "variables" I use those variable to make the respository generic. You can find the location of all of those variables with the command:
-
-```
-rgrep "=:[a-zA-Z0-9]*:=" .
-```
-
-After substituting those variables you only need to remove this section and write yout own README.
 
 ## License
 
-Copyright (C) =:year:=  =:author:=
+Copyright (C) 2025 Cesar Perez
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 

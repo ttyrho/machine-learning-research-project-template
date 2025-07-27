@@ -1,8 +1,8 @@
-# Changes on *=:repository:=*
+# Changes on *machine-learning-research-project-template*
 
 ## [Unreleased]
 
-## [=:tag:=] - YYYY-MM-DD
+## [0.0.0] - YYYY-MM-DD
 
-[Unreleased]: https://github.com/=:user:=/=:repository:=/compare/main...=:tag:=
-[=:tag:=]: https://github.com/=:user:=/=:repository:=/releases/tag/=:tag:=
+[Unreleased]: https://github.com/ttyrho/machine-learning-research-project-template/compare/main...0.0.0
+[0.0.0]: https://github.com/ttyrho/machine-learning-research-project-template/releases/tag/0.0.0
